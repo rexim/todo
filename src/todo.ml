@@ -11,17 +11,6 @@ type todo =
     location : file_location option;
   }
 
-let rec files_of_repo path =
-  if Sys.is_directory path
-  then Sys.readdir path
-       |> Array.to_list
-       |> List.map (fun file ->
-              [path; file]
-              |> String.concat "/"
-              |> files_of_repo)
-       |> List.flatten
-  else [ path ]
-
 let empty_todo =
   {
     id = None;

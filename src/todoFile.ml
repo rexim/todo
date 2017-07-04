@@ -4,3 +4,14 @@ let stream_of_lines file_path =
     (fun _ ->
       try Some (input_line channel)
       with End_of_file -> None)
+
+let rec files_of_dir_tree path =
+  if Sys.is_directory path
+  then Sys.readdir path
+       |> Array.to_list
+       |> List.map (fun file ->
+              [path; file]
+              |> String.concat "/"
+              |> files_of_dir_tree)
+       |> List.flatten
+  else [ path ]
