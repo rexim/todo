@@ -22,13 +22,6 @@ let rec files_of_repo path =
        |> List.flatten
   else [ path ]
 
-let line_stream_of_file file_path =
-  let channel = open_in file_path in
-  Stream.from
-    (fun _ ->
-      try Some (input_line channel)
-      with End_of_file -> None)
-
 let empty_todo =
   {
     id = None;
@@ -66,7 +59,7 @@ let located_todo location todo =
 
 let todos_of_file file_path =
   file_path
-  |> line_stream_of_file
+  |> TodoFile.stream_of_lines
   |> TodoStream.indexed
   |> TodoStream.collect (fun (index, line) ->
          line_as_todo line
