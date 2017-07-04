@@ -30,3 +30,11 @@ let collect f stream =
     with Stream.Failure -> None
   in
   Stream.from next
+
+let indexed stream =
+  let rec next count =
+    try
+      Some (count, Stream.next stream)
+    with Stream.Failure -> None
+  in
+  Stream.from next
