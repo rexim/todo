@@ -11,13 +11,6 @@ type todo =
     location : file_location option;
   }
 
-let stream_as_list stream =
-  let result = ref [] in
-  begin
-    Stream.iter (fun x -> result := x :: !result) stream;
-    List.rev !result
-  end
-
 let rec files_of_repo path =
   if Sys.is_directory path
   then Sys.readdir path
@@ -151,7 +144,7 @@ let _ =
                   |> List.map (fun file ->
                          file
                          |> todos_of_file
-                         |> stream_as_list)
+                         |> TodoStream.as_list)
                   |> List.flatten
                   |> List.iter (fun todo ->
                          todo
