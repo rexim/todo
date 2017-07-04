@@ -29,18 +29,9 @@ let line_stream_of_file file_path =
       try Some (input_line channel)
       with End_of_file -> None)
 
-let stream_filter p stream =
-  let rec next i =
-    try
-      let value = Stream.next stream in
-      if p value then Some value else next i
-    with Stream.Failure -> None
-  in
-  Stream.from next
-
 let stream_find p stream =
   try
-    let element = stream_filter p stream |> Stream.next in
+    let element = TodoStream.filter p stream |> Stream.next in
     Some element
   with Stream.Failure -> None
 
