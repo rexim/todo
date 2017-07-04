@@ -12,3 +12,8 @@ let map f o =
   match o with
   | Some x -> Some (f x)
   | None -> None
+
+let is_some o =
+  match o with
+  | Some _ -> true
+  | None -> false

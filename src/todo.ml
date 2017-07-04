@@ -83,11 +83,6 @@ let empty_todo =
     location = None
   }
 
-let option_defined o =
-  match o with
-  | Some _ -> true
-  | None -> false
-
 let option_iter f o =
   match o with
   | Some x -> f x
@@ -156,7 +151,7 @@ let find_todo_by_id todos search_id =
               if search_id == id
               then Some id
               else None)
-       |> option_defined)
+       |> TodoOption.is_some)
 
 let _ =
   match Sys.argv |> Array.to_list with
