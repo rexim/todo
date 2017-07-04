@@ -1,0 +1,14 @@
+OASISFormat: 0.4
+Name:        todo
+Version:     0.0.1
+Synopsis:    CLI tool for manipulating source code TODOs
+Authors:     Alexey Kutepov <reximkut@gmail.com>
+License:     MIT
+Plugins: META (0.4), DevFiles (0.4)
+BuildTools: ocamlbuild
+
+Executable todo
+  Path:       src/
+  BuildTools: ocamlbuild
+  MainIs:     todo.ml
+  BuildDepends: str, base

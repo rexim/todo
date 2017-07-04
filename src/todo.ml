@@ -41,8 +41,15 @@ let stream_filter p stream =
     try
       let value = Stream.next stream in
       if p value then Some value else next i
-    with Stream.Failure -> None in
+    with Stream.Failure -> None
+  in
   Stream.from next
+
+let stream_find p stream =
+  try
+    let element = stream_filter p stream |> Stream.next in
+    Some element
+  with Stream.Failure -> None
 
 let stream_map f stream =
   let rec next i =
@@ -85,6 +92,16 @@ let option_map f o =
   match o with
   | Some x -> Some (f x)
   | None -> None
+
+let option_flat_map f o =
+  match o with
+  | Some x -> f x
+  | None -> None
+
+let option_defined o =
+  match o with
+  | Some _ -> true
+  | None -> false
 
 let option_iter f o =
   match o with
@@ -145,6 +162,16 @@ let todo_as_string todo =
                   |> option_map file_location_as_string
                   |> option_default "<none>")
                  todo.title
+
+let find_todo_by_id todos search_id =
+  todos
+  |> stream_find (fun todo ->
+       todo.id
+       |> option_flat_map (fun id ->
+              if search_id == id
+              then Some id
+              else None)
+       |> option_defined)
 
 let _ =
   match Sys.argv |> Array.to_list with
