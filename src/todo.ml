@@ -88,11 +88,6 @@ let option_map f o =
   | Some x -> Some (f x)
   | None -> None
 
-let option_flat_map f o =
-  match o with
-  | Some x -> f x
-  | None -> None
-
 let option_defined o =
   match o with
   | Some _ -> true
@@ -162,7 +157,7 @@ let find_todo_by_id todos search_id =
   todos
   |> stream_find (fun todo ->
        todo.id
-       |> option_flat_map (fun id ->
+       |> TodoOption.flat_map (fun id ->
               if search_id == id
               then Some id
               else None)
