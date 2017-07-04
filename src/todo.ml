@@ -29,17 +29,6 @@ let line_stream_of_file file_path =
       try Some (input_line channel)
       with End_of_file -> None)
 
-let stream_collect f stream =
-  let rec next i =
-    try
-      let value = stream |> Stream.next |> f in
-      match value with
-      | Some _ -> value
-      | None -> next i
-    with Stream.Failure -> None
-  in
-  Stream.from next
-
 let indexed_stream stream =
   let rec next count =
     try
@@ -87,7 +76,7 @@ let todos_of_file file_path =
   file_path
   |> line_stream_of_file
   |> indexed_stream
-  |> stream_collect (fun (index, line) ->
+  |> TodoStream.collect (fun (index, line) ->
          line_as_todo line
          |> TodoOption.map (located_todo { file_path = file_path;
                                            line_number = index + 1 }))

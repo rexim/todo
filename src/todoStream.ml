@@ -19,3 +19,14 @@ let find p stream =
     let element = filter p stream |> Stream.next in
     Some element
   with Stream.Failure -> None
+
+let collect f stream =
+  let rec next i =
+    try
+      let value = stream |> Stream.next |> f in
+      match value with
+      | Some _ -> value
+      | None -> next i
+    with Stream.Failure -> None
+  in
+  Stream.from next
