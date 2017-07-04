@@ -13,3 +13,9 @@ let filter p stream =
     with Stream.Failure -> None
   in
   Stream.from next
+
+let find p stream =
+  try
+    let element = filter p stream |> Stream.next in
+    Some element
+  with Stream.Failure -> None

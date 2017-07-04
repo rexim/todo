@@ -29,12 +29,6 @@ let line_stream_of_file file_path =
       try Some (input_line channel)
       with End_of_file -> None)
 
-let stream_find p stream =
-  try
-    let element = TodoStream.filter p stream |> Stream.next in
-    Some element
-  with Stream.Failure -> None
-
 let stream_map f stream =
   let rec next i =
     try Some (f (Stream.next stream))
@@ -102,7 +96,7 @@ let todos_of_file file_path =
   |> stream_collect (fun (index, line) ->
          line_as_todo line
          |> TodoOption.map (located_todo { file_path = file_path;
-                                       line_number = index + 1 }))
+                                           line_number = index + 1 }))
 
 let usage () =
   print_endline "Usage: todo <files..>"
@@ -119,7 +113,7 @@ let todo_as_string todo =
 
 let find_todo_by_id todos search_id =
   todos
-  |> stream_find (fun todo ->
+  |> TodoStream.find (fun todo ->
        todo.id
        |> TodoOption.flat_map (fun id ->
               if search_id == id
