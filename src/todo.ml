@@ -29,12 +29,6 @@ let line_stream_of_file file_path =
       try Some (input_line channel)
       with End_of_file -> None)
 
-let stream_map f stream =
-  let rec next i =
-    try Some (f (Stream.next stream))
-    with Stream.Failure -> None in
-  Stream.from next
-
 let stream_collect f stream =
   let rec next i =
     try
