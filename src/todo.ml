@@ -83,11 +83,6 @@ let empty_todo =
     location = None
   }
 
-let option_iter f o =
-  match o with
-  | Some x -> f x
-  | None -> ()
-
 let option_default d o =
   match o with
   | Some x -> x
