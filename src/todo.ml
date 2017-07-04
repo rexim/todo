@@ -76,11 +76,6 @@ let indexed_stream stream =
   in
   Stream.from next
 
-let option_or o1 o2 =
-  match o1 with
-  | Some a -> Some a
-  | None -> o2
-
 let empty_todo =
   {
     id = None;
@@ -135,8 +130,8 @@ let line_as_todo_without_id line =
 
 (* TODO: make todo tool commentaries aware *)
 let line_as_todo line =
-  option_or (line_as_todo_with_id line)
-            (line_as_todo_without_id line)
+  TodoOption.first_some (line_as_todo_with_id line)
+                        (line_as_todo_without_id line)
 
 let located_todo location todo =
   { todo with location = Some location }
