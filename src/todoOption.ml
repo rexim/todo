@@ -7,3 +7,8 @@ let flat_map f o =
   match o with
   | Some x -> f x
   | None -> None
+
+let map f o =
+  match o with
+  | Some x -> Some (f x)
+  | None -> None

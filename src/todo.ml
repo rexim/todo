@@ -83,11 +83,6 @@ let empty_todo =
     location = None
   }
 
-let option_map f o =
-  match o with
-  | Some x -> Some (f x)
-  | None -> None
-
 let option_defined o =
   match o with
   | Some _ -> true
@@ -137,7 +132,7 @@ let todos_of_file file_path =
   |> indexed_stream
   |> stream_collect (fun (index, line) ->
          line_as_todo line
-         |> option_map (located_todo { file_path = file_path;
+         |> TodoOption.map (located_todo { file_path = file_path;
                                        line_number = index + 1 }))
 
 let usage () =
@@ -149,7 +144,7 @@ let file_location_as_string location =
 let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
-                  |> option_map file_location_as_string
+                  |> TodoOption.map file_location_as_string
                   |> option_default "<none>")
                  todo.title
 
