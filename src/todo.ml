@@ -83,11 +83,6 @@ let empty_todo =
     location = None
   }
 
-let option_default d o =
-  match o with
-  | Some x -> x
-  | None -> d
-
 let regexp_matched_todo line regexp todo_from_groups =
   if Str.string_match regexp line 0
   then Some (todo_from_groups ())
@@ -135,7 +130,7 @@ let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
                   |> TodoOption.map file_location_as_string
-                  |> option_default "<none>")
+                  |> TodoOption.default "<none>")
                  todo.title
 
 let find_todo_by_id todos search_id =

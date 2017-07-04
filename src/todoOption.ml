@@ -17,3 +17,8 @@ let is_some o =
   match o with
   | Some _ -> true
   | None -> false
+
+let default d o =
+  match o with
+  | Some x -> x
+  | None -> d
