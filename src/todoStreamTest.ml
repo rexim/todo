@@ -1,7 +1,7 @@
 open OUnit2
 open TodoStream
 
-let test_todo_stream_flatten test_ctxt =
+let flatten test_ctxt =
   skip_if true "Not implemented yet";
   assert_equal (let accum = ref [] in
                 begin
@@ -15,10 +15,3 @@ let test_todo_stream_flatten test_ctxt =
                [1; 2; 3;
                 1; 2; 3;
                 1; 2; 3]
-
-let suite =
-  "suite">:::
-    ["test_todo_stream_flatten" >:: test_todo_stream_flatten]
-
-
-let () = run_test_tt_main suite
