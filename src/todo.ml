@@ -68,7 +68,7 @@ let todo_as_string todo =
                   |> TodoOption.default "<none>")
                  todo.title
 
-let find_todo_by_id todos search_id =
+let find_todo_by_id search_id todos =
   todos
   |> TodoStream.find (fun todo ->
        todo.id
@@ -78,17 +78,21 @@ let find_todo_by_id todos search_id =
               else None)
        |> TodoOption.is_some)
 
+
+let todos_of_dir_path dir_path =
+  dir_path
+  |> TodoFile.file_stream_of_dir_tree
+  |> TodoStream.map todos_of_file
+  |> TodoStream.flatten
+
 let _ =
   match Sys.argv |> Array.to_list with
   | [] -> usage ()
   | [_] -> usage ()
-  | _ :: files -> files
-                  |> List.map (fun file ->
-                         file
-                         |> todos_of_file
-                         |> TodoStream.as_list)
-                  |> List.flatten
-                  |> List.iter (fun todo ->
-                         todo
-                         |> todo_as_string
-                         |> print_endline)
+  | _ :: id :: _ -> Sys.getcwd
+                    |> TodoFile.root_of_git_repo
+                    |> todos_of_dir_path
+                    |> find_todo_by_id id
+                    |> TodoOption.map todo_as_string
+                    |> TodoOption.default "Nothing"
+                    |> print_endline

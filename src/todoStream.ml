@@ -14,6 +14,9 @@ let filter p stream =
   in
   Stream.from next
 
+let map f stream : 'a Stream.t =
+  failwith "Not implemented yet"
+
 let find p stream =
   try
     let element = filter p stream |> Stream.next in
@@ -38,3 +41,6 @@ let indexed stream =
     with Stream.Failure -> None
   in
   Stream.from next
+
+let flatten (stream_of_streams: 'a Stream.t Stream.t) : 'a Stream.t =
+  failwith "Not implemented yet"

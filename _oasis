@@ -11,4 +11,5 @@ Executable todo
   Path:       src/
   BuildTools: ocamlbuild
   MainIs:     todo.ml
-  BuildDepends: str, base
+  CompiledObject: best
+  BuildDepends: str

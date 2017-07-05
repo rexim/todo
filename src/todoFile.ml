@@ -15,3 +15,9 @@ let rec files_of_dir_tree path =
               |> files_of_dir_tree)
        |> List.flatten
   else [ path ]
+
+let file_stream_of_dir_tree path : string Stream.t =
+  failwith "Not implemented yet"
+
+let root_of_git_repo path: string =
+  failwith "Not implemented yet"
