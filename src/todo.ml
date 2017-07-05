@@ -46,7 +46,7 @@ let line_as_todo line =
 let located_todo location todo =
   { todo with location = Some location }
 
-let todos_of_file file_path =
+let todos_of_file file_path: todo Stream.t =
   file_path
   |> TodoFile.stream_of_lines
   |> TodoStream.indexed
@@ -79,7 +79,7 @@ let find_todo_by_id search_id todos =
        |> TodoOption.is_some)
 
 
-let todos_of_dir_path dir_path =
+let todos_of_dir_path dir_path: todo Stream.t =
   dir_path
   |> TodoFile.file_stream_of_dir_tree
   |> TodoStream.map todos_of_file

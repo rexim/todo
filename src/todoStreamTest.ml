@@ -15,3 +15,15 @@ let flatten test_ctxt =
                [1; 2; 3;
                 1; 2; 3;
                 1; 2; 3]
+
+let map test_ctxt =
+  skip_if true "Not implemented yet";
+  assert_equal (let accum = ref [] in
+                begin
+                  [1; 2; 3]
+                  |> Stream.of_list
+                  |> TodoStream.map (fun x -> x * 2)
+                  |> Stream.iter (fun x -> accum := x :: !accum);
+                  List.rev !accum
+                end)
+               [1; 4; 6]
