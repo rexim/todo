@@ -1,10 +1,12 @@
 language: c
 sudo: required
-install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-ocaml.sh
-script:
+install:
+  - wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-ocaml.sh
   - bash -ex .travis-ocaml.sh
-  - opam install -y oasis ounit
   - eval `opam config env`
+  - opam install -y oasis ounit
+script:
+  - oasis setup
   - ./configure --enable-tests
   - make
   - make test
