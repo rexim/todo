@@ -15,7 +15,13 @@ let filter p stream =
   Stream.from next
 
 let map f stream : 'a Stream.t =
-  failwith "Not implemented yet"
+  let rec next _ =
+    try
+      let value = Stream.next stream in
+      Some (f value)
+    with Stream.Failure -> None
+  in
+  Stream.from next
 
 let find p stream =
   try
