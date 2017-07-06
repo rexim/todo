@@ -1,0 +1,19 @@
+language: c
+sudo: required
+install:
+  - wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-ocaml.sh
+  - bash -ex .travis-ocaml.sh
+  - eval `opam config env`
+  - opam install -y oasis ounit
+script:
+  - oasis setup
+  - ./configure --enable-tests
+  - make
+  - make test
+env:
+  - OCAML_VERSION=4.02
+os:
+  - linux
+notifications:
+  email:
+    - reximkut@gmail.com
