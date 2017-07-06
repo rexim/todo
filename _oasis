@@ -9,6 +9,19 @@ BuildTools: ocamlbuild
 
 Executable todo
   Path:       src/
-  BuildTools: ocamlbuild
   MainIs:     todo.ml
-  BuildDepends: str, base
+  BuildTools: ocamlbuild
+  CompiledObject: best
+  BuildDepends: str
+
+Executable todo_test
+  Path: src/
+  MainIs: todoTest.ml
+  BuildTools: ocamlbuild
+  CompiledObject: best
+  BuildDepends:
+    oUnit
+
+Test todo_test
+  Command: $todo_test
+  TestTools: todo_test

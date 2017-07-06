@@ -14,6 +14,15 @@ let filter p stream =
   in
   Stream.from next
 
+let map f stream : 'a Stream.t =
+  let rec next _ =
+    try
+      let value = Stream.next stream in
+      Some (f value)
+    with Stream.Failure -> None
+  in
+  Stream.from next
+
 let find p stream =
   try
     let element = filter p stream |> Stream.next in
@@ -37,4 +46,20 @@ let indexed stream =
       Some (count, Stream.next stream)
     with Stream.Failure -> None
   in
+  Stream.from next
+
+let flatten (streams: 'a Stream.t Stream.t) : 'a Stream.t =
+  let current_stream = ref None in
+  let rec next i =
+    try
+      let stream =
+        match !current_stream with
+        | Some stream -> stream
+        | None ->
+           let stream = Stream.next streams in
+           current_stream := Some stream;
+           stream in
+      try Some (Stream.next stream)
+      with Stream.Failure -> (current_stream := None; next i)
+    with Stream.Failure -> None in
   Stream.from next
