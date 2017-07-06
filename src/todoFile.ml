@@ -16,8 +16,29 @@ let rec files_of_dir_tree path =
        |> List.flatten
   else [ path ]
 
+(* TODO: traversable layer of abstraction over FS APIs from Sys module
+ *
+ * Right now, any possible implementations of `file_stream_of_dir_tree` and `root_of_git_repo`
+ * will be coupled with FS API from `Sys` module, which makes them really difficult to
+ * unit test.
+ *
+ * We propose to implement a mockable API over `Sys`, which consist of the following
+ * core type:
+ *
+ * ```ocaml
+ * type node =
+ *   | DirNode of (string * node Stream.t)
+ *   | FileNode of string
+ * ```
+ *
+ * Such type is really simple to traverse and mock.
+ *
+ * Once the API is done, we need to implement `file_stream_of_dir_tree` and
+ * `root_of_git_repo` functions using it.
+ *)
+
 let file_stream_of_dir_tree path : string Stream.t =
   failwith "Not implemented yet"
 
-let root_of_git_repo path: string =
+let root_of_git_repo path : string =
   failwith "Not implemented yet"
