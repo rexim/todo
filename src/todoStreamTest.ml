@@ -2,7 +2,6 @@ open OUnit2
 open TodoStream
 
 let flatten test_ctxt =
-  skip_if true "Not implemented yet";
   assert_equal [1; 2; 3;
                 1; 2; 3;
                 1; 2; 3]

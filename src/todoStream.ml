@@ -48,5 +48,18 @@ let indexed stream =
   in
   Stream.from next
 
-let flatten (stream_of_streams: 'a Stream.t Stream.t) : 'a Stream.t =
-  failwith "Not implemented yet"
+let flatten (streams: 'a Stream.t Stream.t) : 'a Stream.t =
+  let current_stream = ref None in
+  let rec next i =
+    try
+      let stream =
+        match !current_stream with
+        | Some stream -> stream
+        | None ->
+           let stream = Stream.next streams in
+           current_stream := Some stream;
+           stream in
+      try Some (Stream.next stream)
+      with Stream.Failure -> (current_stream := None; next i)
+    with Stream.Failure -> None in
+  Stream.from next
