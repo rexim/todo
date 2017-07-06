@@ -16,7 +16,7 @@ let rec files_of_dir_tree path =
        |> List.flatten
   else [ path ]
 
-(* TODO: traversable layer of abstraction over FS APIs from Sys module
+(* TODO(#8): traversable layer of abstraction over FS APIs from Sys module
  *
  * Right now, any possible implementations of `file_stream_of_dir_tree` and `root_of_git_repo`
  * will be coupled with FS API from `Sys` module, which makes them really difficult to
