@@ -89,8 +89,10 @@ let _ =
   match Sys.argv |> Array.to_list with
   | [] -> usage ()
   | [_] -> usage ()
-  | _ :: id :: _ -> Sys.getcwd
+  | _ :: id :: _ -> let current_dir = Sys.getcwd () in
+                    current_dir
                     |> TodoFile.root_of_git_repo
+                    |> TodoOption.default current_dir
                     |> todos_of_dir_path
                     |> find_todo_by_id id
                     |> TodoOption.map todo_as_string

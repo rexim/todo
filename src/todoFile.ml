@@ -31,5 +31,5 @@ let rec file_stream_of_dir_tree path : string Stream.t =
        |> TodoStream.flatten
   else Stream.of_list [path]
 
-let root_of_git_repo path : string =
+let root_of_git_repo path : string option =
   failwith "Not implemented yet"
