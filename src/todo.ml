@@ -56,7 +56,7 @@ let todos_of_file file_path: todo Stream.t =
                                            line_number = index + 1 }))
 
 let usage () =
-  print_endline "Usage: todo <files..>"
+  print_endline "Usage: todo [id]"
 
 let file_location_as_string location =
   Printf.sprintf "%s:%d" location.file_path location.line_number
@@ -73,9 +73,9 @@ let find_todo_by_id search_id todos =
   |> TodoStream.find (fun todo ->
        todo.id
        |> TodoOption.flat_map (fun id ->
-              if search_id == id
-              then Some id
-              else None)
+              id
+              |> String.equal search_id
+              |> TodoOption.of_bool id)
        |> TodoOption.is_some)
 
 
@@ -86,11 +86,17 @@ let todos_of_dir_path dir_path: todo Stream.t =
   |> TodoStream.flatten
 
 let _ =
+  let current_dir = Sys.getcwd () in
+  let search_dir = current_dir
+                   |> TodoFile.root_of_git_repo
+                   |> TodoOption.default current_dir in
   match Sys.argv |> Array.to_list with
   | [] -> usage ()
-  | [_] -> usage ()
-  | _ :: id :: _ -> Sys.getcwd
-                    |> TodoFile.root_of_git_repo
+  | [_] -> search_dir
+           |> todos_of_dir_path
+           |> TodoStream.map todo_as_string
+           |> Stream.iter print_endline
+  | _ :: id :: _ -> search_dir
                     |> todos_of_dir_path
                     |> find_todo_by_id id
                     |> TodoOption.map todo_as_string
