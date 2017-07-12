@@ -16,7 +16,7 @@ let rec files_of_dir_tree path =
        |> List.flatten
   else [ path ]
 
-(* TODO: implement file_stream_of_dir_tree and root_of_git_repo
+(* TODO(#11): implement file_stream_of_dir_tree and root_of_git_repo
  *
  * Supersedes #8
  *)
