@@ -21,8 +21,15 @@ let rec files_of_dir_tree path =
  * Supersedes #8
  *)
 
-let file_stream_of_dir_tree path : string Stream.t =
-  failwith "Not implemented yet"
+let rec file_stream_of_dir_tree path : string Stream.t =
+  if Sys.is_directory path
+  then path
+       |> Sys.readdir
+       |> Array.to_list
+       |> Stream.of_list
+       |> TodoStream.map file_stream_of_dir_tree
+       |> TodoStream.flatten
+  else Stream.of_list [path]
 
 let root_of_git_repo path : string =
   failwith "Not implemented yet"
