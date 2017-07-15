@@ -6,9 +6,11 @@ in rec {
     name = "todo-env";
     version = "0.0.1";
     src = ./.;
-    buildInputs = [ pkgs.ocaml
-                    pkgs.ocamlPackages.ocaml_oasis
-                    pkgs.ocamlPackages.findlib
-                    pkgs.ocamlPackages.utop ];
+    buildInputs = [ pkgs.ocaml pkgs.opam ];
+    shellHook = ''
+      opam init --no-setup
+      opam switch 4.03.0
+      eval `opam config env`
+    '';
   };
 }
