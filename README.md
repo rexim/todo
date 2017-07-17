@@ -36,6 +36,12 @@ file before nix-shell-ing it!** It is not pure and it manipulates
 If you have better ideas on organizing the dev environment, feel free
 to file an issue or a PR.
 
+### NixOS overlay ###
+
+```console
+$ ln -s ./overlay ~/.config/nixpkgs/overlays/todo-overlay
+```
+
 ## License ##
 
 Copyright © 2017 Alexey Kutepov <reximkut@gmail.com>
