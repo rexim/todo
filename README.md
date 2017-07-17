@@ -20,11 +20,10 @@ $ todo 23 -- $(git ls-repo)  # find TODO(23) in the current git repo
 
 ```console
 $ opam install oasis ounit
-$ oasis setup -setup-update dynamic
-$ make
-$ ./todo.native
 $ ./configure --enable-tests
+$ make
 $ make test
+$ make install
 ```
 
 ### NixOS Development Environment ###
