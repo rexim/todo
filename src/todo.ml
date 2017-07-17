@@ -56,7 +56,7 @@ let todos_of_file file_path: todo Stream.t =
                                            line_number = index + 1 }))
 
 let usage () =
-  print_endline "Usage: todo [id --] <files...>"
+  print_endline "Usage: todo [<id> --] <files...>"
 
 let file_location_as_string location =
   Printf.sprintf "%s:%d" location.file_path location.line_number
