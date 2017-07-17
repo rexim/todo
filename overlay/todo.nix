@@ -8,7 +8,7 @@ ocamlPackages.buildOcaml rec {
 
   src = fetchgit {
     url = "git://github.com/rexim/todo.git";
-    rev = "f8682f795c97b4c1a88689ff1a869c69ce73d1b4";
+    rev = "4ba780f9d890c781c46e18c8e9f363f1e82fa475";
     sha256 = "";
   };
 
