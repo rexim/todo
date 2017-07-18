@@ -37,8 +37,12 @@ to file an issue or a PR.
 
 ### NixOS overlay ###
 
+To install the overlay just symlink the `overlay` folder to the
+corresponding place:
+
 ```console
 $ ln -s ./overlay ~/.config/nixpkgs/overlays/todo-overlay
+$ nix-env -iA nixos.todo
 ```
 
 ## License ##
