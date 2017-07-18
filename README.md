@@ -20,11 +20,10 @@ $ todo 23 -- $(git ls-repo)  # find TODO(23) in the current git repo
 
 ```console
 $ opam install oasis ounit
-$ oasis setup -setup-update dynamic
-$ make
-$ ./todo.native
 $ ./configure --enable-tests
+$ make
 $ make test
+$ make install
 ```
 
 ### NixOS Development Environment ###
@@ -35,6 +34,16 @@ file before nix-shell-ing it!** It is not pure and it manipulates
 
 If you have better ideas on organizing the dev environment, feel free
 to file an issue or a PR.
+
+### NixOS overlay ###
+
+To install the overlay just symlink the `overlay` folder to the
+corresponding place:
+
+```console
+$ ln -s ./overlay ~/.config/nixpkgs/overlays/todo-overlay
+$ nix-env -iA nixos.todo
+```
 
 ## License ##
 

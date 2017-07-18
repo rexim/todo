@@ -6,7 +6,6 @@ install:
   - eval `opam config env`
   - opam install -y oasis ounit
 script:
-  - oasis setup
   - ./configure --enable-tests
   - make
   - make test
