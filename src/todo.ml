@@ -92,7 +92,9 @@ let todos_of_file_list files =
   |> TodoStream.flatten
 
 let is_todo_unregistered (todo: todo): bool =
-  failwith "TODO: implement unregistred_todo"
+  match todo.id with
+  | Some _ -> false
+  | None -> true
 
 let register_todo (todo: todo): todo =
   failwith "TODO: implement register_todo"
