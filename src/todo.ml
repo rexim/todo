@@ -103,7 +103,7 @@ let is_todo_unregistered (todo: todo): bool =
 let register_todo (todo: todo): todo =
   failwith "Unimplemented"
 
-(* TODO: Implement persist_todo function
+(* TODO(#24): Implement persist_todo function
  *
  * This function should save the todo to it's original location modifying id.
  *)
