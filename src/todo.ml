@@ -56,7 +56,7 @@ let todos_of_file file_path: todo Stream.t =
                                            line_number = index + 1 }))
 
 let usage () =
-  print_endline "Usage: todo [<id> --] <files...>"
+  print_endline "Usage: todo [<id> --] [register --] <files...>"
 
 let file_location_as_string location =
   Printf.sprintf "%s:%d" location.file_path location.line_number
@@ -91,8 +91,37 @@ let todos_of_file_list files =
   |> TodoStream.map todos_of_file
   |> TodoStream.flatten
 
+let is_todo_unregistered (todo: todo): bool =
+  match todo.id with
+  | Some _ -> false
+  | None -> true
+
+(* TODO(#23): Implement register_todo function
+ *
+ * This function should generate a random id and assign it to TODO
+ *)
+let register_todo (todo: todo): todo =
+  failwith "Unimplemented"
+
+(* TODO(#24): Implement persist_todo function
+ *
+ * This function should save the todo to it's original location modifying id.
+ *)
+let persist_todo (todo: todo): unit =
+  failwith "Unimplemented"
+
 let _ =
   match Sys.argv |> Array.to_list with
+  | _ :: "register" :: "--" :: files ->
+     files
+     |> todos_of_file_list
+     |> TodoStream.filter is_todo_unregistered
+     |> TodoStream.map register_todo
+     |> TodoStream.map persist_todo
+     |> TodoStream.as_list
+     |> List.length
+     |> Printf.sprintf "Registred %d TODOs"
+     |> print_endline
   | _ :: id :: "--" :: files ->
      files
      |> todos_of_file_list
