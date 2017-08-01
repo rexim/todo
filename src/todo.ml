@@ -96,7 +96,7 @@ let is_todo_unregistered (todo: todo): bool =
   | Some _ -> false
   | None -> true
 
-(* TODO: Implement register_todo function
+(* TODO(#23): Implement register_todo function
  *
  * This function should generate a random id and assign it to TODO
  *)
