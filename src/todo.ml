@@ -56,7 +56,7 @@ let todos_of_file file_path: todo Stream.t =
                                            line_number = index + 1 }))
 
 let usage () =
-  print_endline "Usage: todo [<id> --] <files...>"
+  print_endline "Usage: todo [<id> --] [register --] <files...>"
 
 let file_location_as_string location =
   Printf.sprintf "%s:%d" location.file_path location.line_number
@@ -91,8 +91,27 @@ let todos_of_file_list files =
   |> TodoStream.map todos_of_file
   |> TodoStream.flatten
 
+let is_todo_unregistered (todo: todo): bool =
+  failwith "TODO: implement unregistred_todo"
+
+let register_todo (todo: todo): todo =
+  failwith "TODO: implement register_todo"
+
+let persist_todo (todo: todo): unit =
+  failwith "TODO: implement persist_todo"
+
 let _ =
   match Sys.argv |> Array.to_list with
+  | _ :: "register" :: "--" :: files ->
+     files
+     |> todos_of_file_list
+     |> TodoStream.filter is_todo_unregistered
+     |> TodoStream.map register_todo
+     |> TodoStream.map persist_todo
+     |> TodoStream.as_list
+     |> List.length
+     |> Printf.sprintf "Registred %d TODOs"
+     |> print_endline
   | _ :: id :: "--" :: files ->
      files
      |> todos_of_file_list
