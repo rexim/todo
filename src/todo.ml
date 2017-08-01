@@ -96,11 +96,19 @@ let is_todo_unregistered (todo: todo): bool =
   | Some _ -> false
   | None -> true
 
+(* TODO: Implement register_todo function
+ *
+ * This function should generate a random id and assign it to TODO
+ *)
 let register_todo (todo: todo): todo =
-  failwith "TODO: implement register_todo"
+  failwith "Unimplemented"
 
+(* TODO: Implement persist_todo function
+ *
+ * This function should save the todo to it's original location modifying id.
+ *)
 let persist_todo (todo: todo): unit =
-  failwith "TODO: implement persist_todo"
+  failwith "Unimplemented"
 
 let _ =
   match Sys.argv |> Array.to_list with
