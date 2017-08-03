@@ -96,9 +96,6 @@ let is_todo_unregistered (todo: todo): bool =
   | Some _ -> false
   | None -> true
 
-let random_id (): string =
-  failwith "Unimplemented"
-
 let register_todo (todo: todo): todo =
   { todo with id = Some (Uuidm.create `V4 |> Uuidm.to_string) }
 
