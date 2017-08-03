@@ -96,12 +96,11 @@ let is_todo_unregistered (todo: todo): bool =
   | Some _ -> false
   | None -> true
 
-(* TODO(#23): Implement register_todo function
- *
- * This function should generate a random id and assign it to TODO
- *)
-let register_todo (todo: todo): todo =
+let random_id (): string =
   failwith "Unimplemented"
+
+let register_todo (todo: todo): todo =
+  { todo with id = Some (Uuidm.create `V4 |> Uuidm.to_string) }
 
 (* TODO(#24): Implement persist_todo function
  *
