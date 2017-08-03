@@ -12,7 +12,7 @@ Executable todo
   MainIs:     todo.ml
   BuildTools: ocamlbuild
   CompiledObject: best
-  BuildDepends: str
+  BuildDepends: str, uuidm
 
 Executable todo_test
   Path: src/
