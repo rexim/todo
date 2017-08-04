@@ -27,3 +27,8 @@ let of_bool v b =
   if b
   then Some v
   else None
+
+let iter f o =
+  match o with
+  | Some x -> f x
+  | None -> ()
