@@ -99,12 +99,21 @@ let is_todo_unregistered (todo: todo): bool =
 let register_todo (todo: todo): todo =
   { todo with id = Some (Uuidm.create `V4 |> Uuidm.to_string) }
 
-(* TODO(#24): Implement persist_todo function
- *
- * This function should save the todo to it's original location modifying id.
- *)
-let persist_todo (todo: todo): unit =
+(* TODO: Implement replace_line_at_file_location *)
+let replace_line_at_file_location (location: file_location)
+                                  (line: string): unit =
   failwith "Unimplemented"
+
+(* TODO: Implement todo_as_line *)
+let todo_as_line (todo: todo): string =
+  failwith "Unimplemented"
+
+let persist_todo (todo: todo): unit =
+  todo.location
+  |> TodoOption.iter (fun location ->
+       todo
+       |> todo_as_line
+       |> replace_line_at_file_location location)
 
 let _ =
   match Sys.argv |> Array.to_list with
