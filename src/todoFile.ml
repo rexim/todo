@@ -1,3 +1,20 @@
+type location_t =
+  {
+    file_path : string;
+    line_number : int;
+  }
+
+let location file_path line_number =
+  {
+    file_path = file_path;
+    line_number = line_number
+  }
+
+let location_as_string file_location =
+  Printf.sprintf "%s:%d"
+                 file_location.file_path
+                 file_location.line_number
+
 let stream_of_lines file_path =
   let channel = open_in file_path in
   Stream.from
@@ -41,3 +58,8 @@ let rec root_of_git_repo path : string option =
              |> TodoOption.of_bool parent_path
              |> TodoOption.flat_map root_of_git_repo)
      else root_of_git_repo parent_path
+
+(* TODO(#29): Implement replace_line_at_file_location *)
+let replace_line_at_location (location: location_t)
+                             (line: string): unit =
+  failwith "Unimplemented"

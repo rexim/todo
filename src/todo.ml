@@ -1,14 +1,8 @@
-type file_location =
-  {
-    file_path : string;
-    line_number : int;
-  }
-
 type todo =
   {
     id : string option;
     title : string;
-    location : file_location option;
+    location : TodoFile.location_t option;
   }
 
 let empty_todo =
@@ -52,19 +46,16 @@ let todos_of_file file_path: todo Stream.t =
   |> TodoStream.indexed
   |> TodoStream.collect (fun (index, line) ->
          line_as_todo line
-         |> TodoOption.map (located_todo { file_path = file_path;
-                                           line_number = index + 1 }))
+         |> TodoOption.map (TodoFile.location file_path (index + 1)
+                            |> located_todo))
 
 let usage () =
   print_endline "Usage: todo [<id> --] [register --] <files...>"
 
-let file_location_as_string location =
-  Printf.sprintf "%s:%d" location.file_path location.line_number
-
 let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
-                  |> TodoOption.map file_location_as_string
+                  |> TodoOption.map TodoFile.location_as_string
                   |> TodoOption.default "<none>")
                  todo.title
 
@@ -99,11 +90,6 @@ let is_todo_unregistered (todo: todo): bool =
 let register_todo (todo: todo): todo =
   { todo with id = Some (Uuidm.create `V4 |> Uuidm.to_string) }
 
-(* TODO(#29): Implement replace_line_at_file_location *)
-let replace_line_at_file_location (location: file_location)
-                                  (line: string): unit =
-  failwith "Unimplemented"
-
 (* TODO(#28): Implement todo_as_line *)
 let todo_as_line (todo: todo): string =
   failwith "Unimplemented"
@@ -113,7 +99,7 @@ let persist_todo (todo: todo): unit =
   |> TodoOption.iter (fun location ->
        todo
        |> todo_as_line
-       |> replace_line_at_file_location location)
+       |> TodoFile.replace_line_at_location location)
 
 let _ =
   match Sys.argv |> Array.to_list with
