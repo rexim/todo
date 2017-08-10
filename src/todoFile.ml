@@ -35,11 +35,10 @@ let rec file_stream_of_dir_tree path : string Stream.t =
        |> TodoStream.flatten
   else Stream.of_list [path]
 
-(* TODO: Implement replace_file_with_stream *)
+(* TODO(#34): Implement replace_file_with_stream *)
 let replace_file_with_stream file_path stream =
   failwith "TodoFile.replace_file_with_stream unimplemented yet"
 
-(* TODO(#29): Implement replace_line_at_file_location *)
 let replace_line_at_location (location: location_t)
                              (new_line: string): unit =
   location.file_path
