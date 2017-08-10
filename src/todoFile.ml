@@ -35,7 +35,17 @@ let rec file_stream_of_dir_tree path : string Stream.t =
        |> TodoStream.flatten
   else Stream.of_list [path]
 
-(* TODO(#29): Implement replace_line_at_file_location *)
+(* TODO(#34): Implement replace_file_with_stream *)
+let replace_file_with_stream file_path stream =
+  failwith "TodoFile.replace_file_with_stream unimplemented yet"
+
 let replace_line_at_location (location: location_t)
-                             (line: string): unit =
-  failwith "Unimplemented"
+                             (new_line: string): unit =
+  location.file_path
+  |> stream_of_lines
+  |> TodoStream.indexed
+  |> TodoStream.map (fun (line_number, origin_line) ->
+         if line_number == location.line_number
+         then new_line
+         else origin_line)
+  |> replace_file_with_stream location.file_path

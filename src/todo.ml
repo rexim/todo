@@ -32,7 +32,7 @@ let line_as_todo_without_id line =
     (fun () -> { empty_todo with
                  title = Str.matched_group 1 line })
 
-(* TODO: make todo tool commentaries aware *)
+(* TODO(#6): make todo tool commentaries aware *)
 let line_as_todo line =
   TodoOption.first_some (line_as_todo_with_id line)
                         (line_as_todo_without_id line)
