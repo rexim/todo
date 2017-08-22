@@ -1,3 +1,5 @@
+(* TODO: replace TodoStream with Enum from Batteries *)
+
 let as_list stream =
   let result = ref [] in
   begin

@@ -4,7 +4,7 @@ install:
   - wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-ocaml.sh
   - bash -ex .travis-ocaml.sh
   - eval `opam config env`
-  - opam install -y oasis ounit uuidm
+  - opam install -y oasis ounit uuidm batteries
 script:
   - ./configure --enable-tests
   - make
