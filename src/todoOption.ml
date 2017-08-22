@@ -1,3 +1,5 @@
+(* TODO(#36): replace TodoOption with BatOption from batteries *)
+
 let first_some o1 o2 =
   match o1 with
   | Some a -> Some a
