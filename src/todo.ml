@@ -62,13 +62,12 @@ let todo_as_string todo =
                  todo.title
 
 let find_todo_by_id search_id todos =
+  let (>>=) = BatOption.bind in
   todos
   |> TodoStream.find (fun todo ->
-       todo.id
-       |> TodoOption.flat_map (fun id ->
-              id
-              |> String.equal search_id
-              |> TodoOption.of_bool id)
+       todo.id >>= (fun id -> id
+                              |> String.equal search_id
+                              %> TodoOption.of_bool id)
        |> BatOption.is_some)
 
 
