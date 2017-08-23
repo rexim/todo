@@ -58,7 +58,7 @@ let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
                   |> TodoOption.map TodoFile.location_as_string
-                  |> TodoOption.default "<none>")
+                  |> BatOption.default "<none>")
                  todo.title
 
 let find_todo_by_id search_id todos =
@@ -120,7 +120,7 @@ let _ =
      |> todos_of_file_list
      |> find_todo_by_id id
      |> TodoOption.map todo_as_string
-     |> TodoOption.default "Nothing"
+     |> BatOption.default "Nothing"
      |> print_endline
   | _ :: files when List.length files != 0  ->
      files

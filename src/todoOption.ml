@@ -20,11 +20,6 @@ let is_some o =
   | Some _ -> true
   | None -> false
 
-let default d o =
-  match o with
-  | Some x -> x
-  | None -> d
-
 let of_bool v b =
   if b
   then Some v
