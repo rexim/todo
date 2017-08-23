@@ -1,4 +1,5 @@
 open Batteries
+open BatOption.Infix
 
 type todo =
   {
@@ -62,7 +63,6 @@ let todo_as_string todo =
                  todo.title
 
 let find_todo_by_id search_id todos =
-  let (>>=) = BatOption.bind in
   todos
   |> TodoStream.find (fun todo ->
        todo.id >>= (fun id -> id
