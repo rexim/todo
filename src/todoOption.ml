@@ -10,11 +10,6 @@ let flat_map f o =
   | Some x -> f x
   | None -> None
 
-let map f o =
-  match o with
-  | Some x -> Some (f x)
-  | None -> None
-
 let of_bool v b =
   if b
   then Some v

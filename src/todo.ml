@@ -48,8 +48,8 @@ let todos_of_file file_path: todo Stream.t =
   |> TodoStream.indexed
   |> TodoStream.collect (fun (index, line) ->
          line_as_todo line
-         |> TodoOption.map (TodoFile.location file_path (index + 1)
-                            |> located_todo))
+         |> BatOption.map (TodoFile.location file_path (index + 1)
+                           |> located_todo))
 
 let usage () =
   print_endline "Usage: todo [<id> --] [register --] <files...>"
@@ -57,7 +57,7 @@ let usage () =
 let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
-                  |> TodoOption.map TodoFile.location_as_string
+                  |> BatOption.map TodoFile.location_as_string
                   |> BatOption.default "<none>")
                  todo.title
 
@@ -119,7 +119,7 @@ let _ =
      files
      |> todos_of_file_list
      |> find_todo_by_id id
-     |> TodoOption.map todo_as_string
+     |> BatOption.map todo_as_string
      |> BatOption.default "Nothing"
      |> print_endline
   | _ :: files when List.length files != 0  ->
