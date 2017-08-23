@@ -5,7 +5,7 @@ CLI tool for manipulating source code TODOs
 ## Usage ##
 
 ```
-Usage: todo [<id> --] <files...>
+Usage: todo [<id> --] [register --] <files...>
 ```
 
 ### Examples
@@ -20,7 +20,7 @@ $ todo register -- $(git ls-repo) # for every ID-less TODO in git repo assign a 
 ## Build and Dev ##
 
 ```console
-$ opam install oasis ounit uuidm
+$ opam install oasis ounit uuidm batteries
 $ ./configure --enable-tests
 $ make
 $ make test
