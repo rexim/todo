@@ -15,11 +15,6 @@ let map f o =
   | Some x -> Some (f x)
   | None -> None
 
-let is_some o =
-  match o with
-  | Some _ -> true
-  | None -> false
-
 let of_bool v b =
   if b
   then Some v

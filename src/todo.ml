@@ -69,7 +69,7 @@ let find_todo_by_id search_id todos =
               id
               |> String.equal search_id
               |> TodoOption.of_bool id)
-       |> TodoOption.is_some)
+       |> BatOption.is_some)
 
 
 let todos_of_dir_path dir_path: todo Stream.t =
