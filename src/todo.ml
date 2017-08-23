@@ -66,10 +66,10 @@ let todo_as_string todo =
 let find_todo_by_id search_id todos =
   todos
   |> TodoStream.find (fun todo ->
-       todo.id >>= (fun id -> id
-                              |> String.equal search_id
-                              %> TodoOption.of_bool id)
-       |> BatOption.is_some)
+         todo.id >>= (fun id -> if String.equal search_id id
+                                then Some id
+                                else None)
+         |> BatOption.is_some)
 
 
 let todos_of_dir_path dir_path: todo Stream.t =
