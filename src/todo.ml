@@ -28,7 +28,7 @@ let line_as_todo_with_id line =
                  id = Some((Str.matched_group 1 line));
                  title = Str.matched_group 2 line })
 
-let line_as_todo_without_id line =
+let line_as_todo_without_id line: todo option =
   regexp_matched_todo
     line
     (Str.regexp "^.*TODO *: *\\(.*\\)$")
@@ -37,8 +37,9 @@ let line_as_todo_without_id line =
 
 (* TODO(#6): make todo tool commentaries aware *)
 let line_as_todo line =
-  TodoOption.first_some (line_as_todo_with_id line)
-                        (line_as_todo_without_id line)
+  (line_as_todo_with_id line)
+  |> BatOption.map BatOption.some
+  |> BatOption.default (line_as_todo_without_id line)
 
 let located_todo location todo =
   { todo with location = Some location }
