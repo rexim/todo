@@ -1,3 +1,6 @@
+open Batteries
+open BatOption.Infix
+
 type todo =
   {
     id : string option;
@@ -25,7 +28,7 @@ let line_as_todo_with_id line =
                  id = Some((Str.matched_group 1 line));
                  title = Str.matched_group 2 line })
 
-let line_as_todo_without_id line =
+let line_as_todo_without_id line: todo option =
   regexp_matched_todo
     line
     (Str.regexp "^.*TODO *: *\\(.*\\)$")
@@ -34,8 +37,9 @@ let line_as_todo_without_id line =
 
 (* TODO(#6): make todo tool commentaries aware *)
 let line_as_todo line =
-  TodoOption.first_some (line_as_todo_with_id line)
-                        (line_as_todo_without_id line)
+  (line_as_todo_with_id line)
+  |> BatOption.map BatOption.some
+  |> BatOption.default (line_as_todo_without_id line)
 
 let located_todo location todo =
   { todo with location = Some location }
@@ -46,8 +50,8 @@ let todos_of_file file_path: todo Stream.t =
   |> TodoStream.indexed
   |> TodoStream.collect (fun (index, line) ->
          line_as_todo line
-         |> TodoOption.map (TodoFile.location file_path (index + 1)
-                            |> located_todo))
+         |> BatOption.map (TodoFile.location file_path (index + 1)
+                           |> located_todo))
 
 let usage () =
   print_endline "Usage: todo [<id> --] [register --] <files...>"
@@ -55,19 +59,17 @@ let usage () =
 let todo_as_string todo =
   Printf.sprintf "%s: %s"
                  (todo.location
-                  |> TodoOption.map TodoFile.location_as_string
-                  |> TodoOption.default "<none>")
+                  |> BatOption.map TodoFile.location_as_string
+                  |> BatOption.default "<none>")
                  todo.title
 
 let find_todo_by_id search_id todos =
   todos
   |> TodoStream.find (fun todo ->
-       todo.id
-       |> TodoOption.flat_map (fun id ->
-              id
-              |> String.equal search_id
-              |> TodoOption.of_bool id)
-       |> TodoOption.is_some)
+         todo.id >>= (fun id -> if String.equal search_id id
+                                then Some id
+                                else None)
+         |> BatOption.is_some)
 
 
 let todos_of_dir_path dir_path: todo Stream.t =
@@ -96,7 +98,7 @@ let todo_as_line (todo: todo): string =
 
 let persist_todo (todo: todo): unit =
   todo.location
-  |> TodoOption.iter (fun location ->
+  |> BatOption.may (fun location ->
        todo
        |> todo_as_line
        |> TodoFile.replace_line_at_location location)
@@ -117,8 +119,8 @@ let _ =
      files
      |> todos_of_file_list
      |> find_todo_by_id id
-     |> TodoOption.map todo_as_string
-     |> TodoOption.default "Nothing"
+     |> BatOption.map todo_as_string
+     |> BatOption.default "Nothing"
      |> print_endline
   | _ :: files when List.length files != 0  ->
      files
