@@ -1,3 +1,5 @@
+open Batteries
+
 type todo =
   {
     id : string option;
@@ -96,7 +98,7 @@ let todo_as_line (todo: todo): string =
 
 let persist_todo (todo: todo): unit =
   todo.location
-  |> TodoOption.iter (fun location ->
+  |> BatOption.may (fun location ->
        todo
        |> todo_as_line
        |> TodoFile.replace_line_at_location location)
