@@ -11,10 +11,10 @@ Usage: todo [<id> --] [register --] <files...>
 ### Examples
 
 ```console
-$ todo src/main.ml                # show all TODOs in the src/main.ml file
-$ todo $(git ls-repo)             # show all TODOs in the current git repo
-$ todo 23 -- $(git ls-repo)       # find TODO(23) in the current git repo
-$ todo register -- $(git ls-repo) # for every ID-less TODO in git repo assign a random V4 UUID
+$ todo src/main.ml                 # show all TODOs in the src/main.ml file
+$ todo $(git ls-files)             # show all TODOs in the current git repo
+$ todo 23 -- $(git ls-files)       # find TODO(23) in the current git repo
+$ todo register -- $(git ls-files) # for every ID-less TODO in git repo assign a random V4 UUID
 ```
 
 ## Build and Dev ##
