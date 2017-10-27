@@ -1,3 +1,5 @@
+open Batteries
+
 type location_t =
   {
     file_path : string;
@@ -17,23 +19,23 @@ let location_as_string file_location =
 
 let stream_of_lines file_path =
   let channel = open_in file_path in
-  Stream.from
+  Enum.from_while
     (fun _ ->
       try Some (input_line channel)
       with End_of_file -> None)
 
-let rec file_stream_of_dir_tree path : string Stream.t =
+let rec file_stream_of_dir_tree path : string Enum.t =
   if Sys.is_directory path
   then path
        |> Sys.readdir
        |> Array.to_list
-       |> Stream.of_list
-       |> TodoStream.map (fun name ->
+       |> List.enum
+       |> Enum.map (fun name ->
               name
               |> Filename.concat path
               |> file_stream_of_dir_tree)
-       |> TodoStream.flatten
-  else Stream.of_list [path]
+       |> Enum.flatten
+  else List.enum [path]
 
 (* TODO(#34): Implement replace_file_with_stream *)
 let replace_file_with_stream file_path stream =
@@ -43,8 +45,7 @@ let replace_line_at_location (location: location_t)
                              (new_line: string): unit =
   location.file_path
   |> stream_of_lines
-  |> TodoStream.indexed
-  |> TodoStream.map (fun (line_number, origin_line) ->
+  |> Enum.mapi (fun line_number origin_line ->
          if line_number == location.line_number
          then new_line
          else origin_line)

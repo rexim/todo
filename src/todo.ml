@@ -44,11 +44,11 @@ let line_as_todo line =
 let located_todo location todo =
   { todo with location = Some location }
 
-let todos_of_file file_path: todo Stream.t =
+let todos_of_file file_path: todo Enum.t =
   file_path
   |> TodoFile.stream_of_lines
-  |> TodoStream.indexed
-  |> TodoStream.collect (fun (index, line) ->
+  |> Enum.mapi (fun index line -> (index, line))
+  |> Enum.filter_map (fun (index, line) ->
          line_as_todo line
          |> BatOption.map (TodoFile.location file_path (index + 1)
                            |> located_todo))
@@ -64,25 +64,29 @@ let todo_as_string todo =
                  todo.title
 
 let find_todo_by_id search_id todos =
-  todos
-  |> TodoStream.find (fun todo ->
-         todo.id >>= (fun id -> if String.equal search_id id
-                                then Some id
-                                else None)
-         |> BatOption.is_some)
+  try
+    todos
+    |> Enum.find (fun todo ->
+           todo.id >>= (fun id -> if String.equal search_id id
+                                  then Some id
+                                  else None)
+           |> BatOption.is_some)
+    |> BatOption.some
+  with
+    Not_found -> None
 
 
-let todos_of_dir_path dir_path: todo Stream.t =
+let todos_of_dir_path dir_path: todo Enum.t =
   dir_path
   |> TodoFile.file_stream_of_dir_tree
-  |> TodoStream.map todos_of_file
-  |> TodoStream.flatten
+  |> Enum.map todos_of_file
+  |> Enum.flatten
 
 let todos_of_file_list files =
   files
-  |> Stream.of_list
-  |> TodoStream.map todos_of_file
-  |> TodoStream.flatten
+  |> List.enum
+  |> Enum.map todos_of_file
+  |> Enum.flatten
 
 let is_todo_unregistered (todo: todo): bool =
   match todo.id with
@@ -108,10 +112,10 @@ let _ =
   | _ :: "register" :: "--" :: files ->
      files
      |> todos_of_file_list
-     |> TodoStream.filter is_todo_unregistered
-     |> TodoStream.map register_todo
-     |> TodoStream.map persist_todo
-     |> TodoStream.as_list
+     |> Enum.filter is_todo_unregistered
+     |> Enum.map register_todo
+     |> Enum.map persist_todo
+     |> List.of_enum
      |> List.length
      |> Printf.sprintf "Registred %d TODOs"
      |> print_endline
@@ -125,6 +129,6 @@ let _ =
   | _ :: files when List.length files != 0  ->
      files
      |> todos_of_file_list
-     |> TodoStream.map todo_as_string
-     |> Stream.iter print_endline
+     |> Enum.map todo_as_string
+     |> Enum.iter print_endline
   | _ -> usage ()
