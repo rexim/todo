@@ -93,7 +93,7 @@ let is_todo_unregistered (todo: todo): bool =
 let register_todo (todo: todo): todo =
   { todo with id = Some (Uuidm.create `V4 |> Uuidm.to_string) }
 
-(* TODO: implement mechanism for ignoring false detected TODO lines *)
+(* TODO(#44): implement mechanism for ignoring false detected TODO lines *)
 let todo_as_line (todo: todo): string =
   match todo.id with
   | Some id -> Printf.sprintf "%sTODO(%s): %s" todo.prefix id todo.suffix
