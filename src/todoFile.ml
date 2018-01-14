@@ -22,7 +22,9 @@ let stream_of_lines file_path =
   Enum.from_while
     (fun _ ->
       try Some (input_line channel)
-      with End_of_file -> None)
+      with End_of_file ->
+        close_in channel;
+        None)
 
 let rec file_stream_of_dir_tree path : string Enum.t =
   if Sys.is_directory path
@@ -37,9 +39,10 @@ let rec file_stream_of_dir_tree path : string Enum.t =
        |> Enum.flatten
   else List.enum [path]
 
-(* TODO(#34): Implement replace_file_with_stream *)
-let replace_file_with_stream file_path stream =
-  failwith "TodoFile.replace_file_with_stream unimplemented yet"
+let replace_file_with_stream (file_path: string) (stream: string Enum.t) =
+  let channel = open_out file_path in
+  stream |> Enum.iter (fun line -> Printf.fprintf channel "%s\n" line);
+  close_out channel
 
 let replace_line_at_location (location: location_t)
                              (new_line: string): unit =
