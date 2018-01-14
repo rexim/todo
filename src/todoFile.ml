@@ -22,7 +22,9 @@ let stream_of_lines file_path =
   Enum.from_while
     (fun _ ->
       try Some (input_line channel)
-      with End_of_file -> None)
+      with End_of_file ->
+        close_in channel;
+        None)
 
 let rec file_stream_of_dir_tree path : string Enum.t =
   if Sys.is_directory path
