@@ -44,6 +44,7 @@ let replace_file_with_stream (file_path: string) (stream: string Enum.t) =
   stream |> Enum.iter (fun line -> Printf.fprintf channel "%s\n" line);
   close_out channel
 
+(* TODO: replace_line_at_location remove the entire content of the file *)
 let replace_line_at_location (location: location_t)
                              (new_line: string): unit =
   location.file_path
