@@ -4,14 +4,16 @@ open BatOption.Infix
 type todo =
   {
     id : string option;
-    title : string;
+    prefix: string;
+    suffix: string;
     location : TodoFile.location_t option;
   }
 
 let empty_todo =
   {
     id = None;
-    title = "";
+    prefix = "";
+    suffix = "";
     location = None
   }
 
@@ -23,17 +25,19 @@ let regexp_matched_todo line regexp todo_from_groups =
 let line_as_todo_with_id line =
   regexp_matched_todo
     line
-    (Str.regexp "^.*TODO(\\(.*\\)) *: *\\(.*\\)$")
+    (Str.regexp "\\(^.*\\)TODO(\\(.*\\)) *: *\\(.*\\)$")
     (fun () -> { empty_todo with
-                 id = Some((Str.matched_group 1 line));
-                 title = Str.matched_group 2 line })
+                 prefix = Str.matched_group 1 line;
+                 id = Some((Str.matched_group 2 line));
+                 suffix = Str.matched_group 3 line })
 
 let line_as_todo_without_id line: todo option =
   regexp_matched_todo
     line
-    (Str.regexp "^.*TODO *: *\\(.*\\)$")
+    (Str.regexp "\\(^.*\\)TODO *: *\\(.*\\)$")
     (fun () -> { empty_todo with
-                 title = Str.matched_group 1 line })
+                 prefix = Str.matched_group 1 line;
+                 suffix = Str.matched_group 2 line })
 
 (* TODO(#6): make todo tool commentaries aware *)
 let line_as_todo line =
@@ -55,13 +59,6 @@ let todos_of_file file_path: todo Enum.t =
 
 let usage () =
   print_endline "Usage: todo [<id> --] [register --] <files...>"
-
-let todo_as_string todo =
-  Printf.sprintf "%s: %s"
-                 (todo.location
-                  |> BatOption.map TodoFile.location_as_string
-                  |> BatOption.default "<none>")
-                 todo.title
 
 let find_todo_by_id search_id todos =
   try
@@ -98,7 +95,9 @@ let register_todo (todo: todo): todo =
 
 (* TODO(#28): Implement todo_as_line *)
 let todo_as_line (todo: todo): string =
-  failwith "Unimplemented"
+  match todo.id with
+  | Some id -> Printf.sprintf "%sTODO(%s): %s" todo.prefix id todo.suffix
+  | None -> Printf.sprintf "%sTODO: %s" todo.prefix todo.suffix
 
 let persist_todo (todo: todo): unit =
   todo.location
@@ -123,12 +122,12 @@ let _ =
      files
      |> todos_of_file_list
      |> find_todo_by_id id
-     |> BatOption.map todo_as_string
+     |> BatOption.map todo_as_line
      |> BatOption.default "Nothing"
      |> print_endline
   | _ :: files when List.length files != 0  ->
      files
      |> todos_of_file_list
-     |> Enum.map todo_as_string
+     |> Enum.map todo_as_line
      |> Enum.iter print_endline
   | _ -> usage ()
