@@ -20,7 +20,7 @@ Executable todo_test
   BuildTools: ocamlbuild
   CompiledObject: best
   BuildDepends:
-    oUnit
+    oUnit, batteries
 
 Test todo_test
   Command: $todo_test

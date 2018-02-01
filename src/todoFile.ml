@@ -39,7 +39,7 @@ let rec file_stream_of_dir_tree path : string Enum.t =
        |> Enum.flatten
   else List.enum [path]
 
-let replace_file_with_stream (file_path: string) (stream: string Enum.t) =
+let stream_to_file (file_path: string) (stream: string Enum.t) =
   let channel = open_out file_path in
   stream |> Enum.iter (fun line -> Printf.fprintf channel "%s\n" line);
   close_out channel
@@ -47,10 +47,18 @@ let replace_file_with_stream (file_path: string) (stream: string Enum.t) =
 (* TODO(#45): replace_line_at_location remove the entire content of the file *)
 let replace_line_at_location (location: location_t)
                              (new_line: string): unit =
+  let temp_file = Filename.temp_file "todo" ".txt" in
+
   location.file_path
   |> stream_of_lines
   |> Enum.mapi (fun line_number origin_line ->
          if line_number == location.line_number
          then new_line
          else origin_line)
-  |> replace_file_with_stream location.file_path
+  |> stream_to_file temp_file;
+
+  temp_file
+  |> stream_of_lines
+  |> stream_to_file location.file_path;
+
+  Sys.remove temp_file
