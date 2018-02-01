@@ -14,7 +14,7 @@ let suite =
           TodoFile.replace_line_at_location { file_path = file
                                             ; line_number = 1 }
                                             "hello";
-          (* TODO: assert_equal does not print the values it compares *)
+          (* TODO(#47): assert_equal does not print the values it compares *)
           assert_equal [ "foo"; "hello"; "baz" ]
                        (TodoFile.stream_of_lines file
                         |> List.of_enum)) ]
