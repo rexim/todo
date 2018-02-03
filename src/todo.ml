@@ -54,7 +54,7 @@ let todos_of_file file_path: todo Enum.t =
   |> Enum.mapi (fun index line -> (index, line))
   |> Enum.filter_map (fun (index, line) ->
          line_as_todo line
-         |> BatOption.map (TodoFile.location file_path (index + 1)
+         |> BatOption.map (TodoFile.location file_path index
                            |> located_todo))
 
 let usage () =
