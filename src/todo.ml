@@ -99,12 +99,13 @@ let todo_as_line (todo: todo): string =
   | Some id -> Printf.sprintf "%sTODO(%s): %s" todo.prefix id todo.suffix
   | None -> Printf.sprintf "%sTODO: %s" todo.prefix todo.suffix
 
-let persist_todo (todo: todo): unit =
+let persist_todo (todo: todo): string option =
+  let open BatOption.Infix in
   todo.location
-  |> BatOption.may (fun location ->
-       todo
-       |> todo_as_line
-       |> TodoFile.replace_line_at_location location)
+  >>= fun location -> todo
+                      |> todo_as_line
+                      |> TodoFile.replace_line_at_location location;
+                      todo.id
 
 let _ =
   match Sys.argv |> Array.to_list with
@@ -113,11 +114,8 @@ let _ =
      |> todos_of_file_list
      |> Enum.filter is_todo_unregistered
      |> Enum.map register_todo
-     |> Enum.map persist_todo
-     |> List.of_enum
-     |> List.length
-     |> Printf.sprintf "Registred %d TODOs"
-     |> print_endline
+     |> Enum.filter_map persist_todo
+     |> Enum.iter print_endline
   | _ :: id :: "--" :: files ->
      files
      |> todos_of_file_list
