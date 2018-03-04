@@ -58,7 +58,7 @@ let todos_of_file file_path: todo Enum.t =
                            |> located_todo))
 
 let usage () =
-  print_endline "Usage: todo [<id> --] [register --] <files...>"
+  print_endline "Usage: todo [show <id> | register | list]  <files...>"
 
 let find_todo_by_id search_id todos =
   try
@@ -109,21 +109,21 @@ let persist_todo (todo: todo): string option =
 
 let _ =
   match Sys.argv |> Array.to_list with
-  | _ :: "register" :: "--" :: files ->
+  | _ :: "register" :: files ->
      files
      |> todos_of_file_list
      |> Enum.filter is_todo_unregistered
      |> Enum.map register_todo
      |> Enum.filter_map persist_todo
      |> Enum.iter print_endline
-  | _ :: id :: "--" :: files ->
+  | _ :: "show" :: id :: files ->
      files
      |> todos_of_file_list
      |> find_todo_by_id id
      |> BatOption.map todo_as_line
      |> BatOption.default "Nothing"
      |> print_endline
-  | _ :: files when List.length files != 0  ->
+  | _ :: "list" :: files when List.length files != 0  ->
      files
      |> todos_of_file_list
      |> Enum.map todo_as_line
