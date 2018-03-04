@@ -58,7 +58,7 @@ let todos_of_file file_path: todo Enum.t =
                            |> located_todo))
 
 let usage () =
-  print_endline "Usage: todo [show <id> | register | list]  <files...>"
+  print_endline "Usage: todo [show <id> | register | list | replace <old-id> <new-id>]  <files...>"
 
 let find_todo_by_id search_id todos =
   try
@@ -128,4 +128,13 @@ let _ =
      |> todos_of_file_list
      |> Enum.map todo_as_line
      |> Enum.iter print_endline
+  | _ :: "replace" :: oldId :: newId :: files ->
+     files
+     |> todos_of_file_list
+     |> find_todo_by_id oldId
+     |> BatOption.map (fun todo -> { todo with id = Some newId })
+     |> BatOption.map persist_todo
+     |> BatOption.map (fun _ -> Printf.sprintf "Replaced %s with %s" oldId newId)
+     |> BatOption.default (Printf.sprintf "Couldn't find %s id" oldId)
+     |> print_endline
   | _ -> usage ()
