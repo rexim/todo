@@ -11,7 +11,7 @@ in rec {
       opam init --no-setup
       opam switch 4.03.0
       eval `opam config env`
-      opam install oasis ounit batteries utop
+      opam install oasis ounit batteries utop uuidm
     '';
   };
 }
